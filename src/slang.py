@@ -1,13 +1,14 @@
-from bord import Cell
+from bedrock import Cel, SlangCel, SlangStaartCel
+
 class Slang():
+
     def __init__(self, json):
+        self.segmenten = []
         self.id = json['id']
         for b in (json['body'])[:-1]:
-            self.add_snakePart(SnakePart(b['x'], b['y']))
-        tail = SnakeTail(snake_data['body'][-1]['x'],
-                         snake_data['body'][-1]['y'])
-        snake.add_snakePart(tail)
-        return snake
+            self.voeg_segment_toe(SlangCel(b['x'], b['y']))
+        staart = SlangStaartCel(json['body'][-1]['x'], json['body'][-1]['y'])
+        self.voeg_segment_toe(staart)
 
-    def add_snakePart(self, sp):
-        self.snakeParts.append(sp)
+    def voeg_segment_toe(self, sp):
+        self.segmenten.append(sp)

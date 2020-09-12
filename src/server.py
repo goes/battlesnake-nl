@@ -1,15 +1,11 @@
 import os
 import cherrypy
 
-from snake import SlangenBrein
-from board import Bord
+from debug import Debug
+from brein import SlangenBrein
+from bord import Bord
 from soetkin import Soetkin
 from pelle import Pelle
-
-"""
-This is a simple Battlesnake server written in Python.
-For instructions see https://github.com/BattlesnakeOfficial/starter-snake-python/README.md
-"""
 
 
 class Battlesnake(object):
@@ -40,17 +36,14 @@ class Battlesnake(object):
     @cherrypy.tools.json_in()
     @cherrypy.tools.json_out()
     def move(self):
-        # This function is called on every turn of a game. It's how your snake decides where to move.
-        # Valid moves are "up", "down", "left", or "right".
-        # TODO: Use the information in cherrypy.request.json to decide your next move.
+  
         data = cherrypy.request.json
+        bord = Bord(data)
+        slang = SlangenBrein(data, board)
+        move = slang.move()
 
-        # Choose a random direction to move in
-        board = Bord(data)
-        snake = Pelle(data, board)
-        move = snake.move()
-
-        print(f"MOVE: {move}")
+        Debug.log_with_action(cls, move, "Volgende zet")
+        # print(f"MOVE: {move}")
         return {"move": move}
 
     @cherrypy.expose

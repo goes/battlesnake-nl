@@ -1,4 +1,4 @@
-from snake import SlangenBrein
+from brein import SlangenBrein
 
 class Soetkin(SlangenBrein):
   

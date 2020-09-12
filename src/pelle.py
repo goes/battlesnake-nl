@@ -1,4 +1,4 @@
-from snake import SlangenBrein
+from brein import SlangenBrein
 
 # Pelle is very hungry all the time
 class Pelle(SlangenBrein):

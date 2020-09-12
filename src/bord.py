@@ -1,11 +1,11 @@
-from enum import Enum
+from bedrock import Richting, Cel, VoedselCel, SlangCel, SlangStaartCel
+from slang import Slang
 from debug import Debug
-
 
 class Bord(object):
   
     def __init__(self, data):
-        self.snakes = []
+        self.slangen = []
         self.data = data
         self.init_bord()
 
@@ -19,11 +19,11 @@ class Bord(object):
         self.bord_breedte = m
         self.bord_hoogte = n
         self.board = [[Cel(i, j) for i in range(m)] for j in range(n)]
-        self.zet_voedsel()
-        self.zet_slangen()
+        self.zet_voedsel_op_bord()
+        self.zet_slangen_op_bord()
 
-
-    def zet_voedsel(self):
+    # voedsel parsen en op het bord zetten
+    def zet_voedsel_op_bord(self):
         foods = self.data['board']['food']
         for f in foods:
             x = f['x']
@@ -31,31 +31,30 @@ class Bord(object):
             food = VoedselCel(x, y)
             self.board[x][y] = food
 
-    def zet_slangen(self):
+    # geef de cel op positie (x,y)
+    # elke plaats op het bord is een Cel (of een subklasse)
+    def cel(self, x, y):
+        return self.board[x][y]
+
+    # slangen parsen en op het bord zetten
+    # dit zijn alle slangen, ook de eigen slang
+    def zet_slangen_op_bord(self):
         snake_datas = self.data['board']['snakes']
 
         for snake_data in snake_datas:
-            snake = self.parse_slang(snake_data)
-            self.snakes.append(snake)
-            self.update_board_with_snake(snake)
+            slang = Slang(snake_data)
+            self.zet_slang_op_bord(slang)
 
-        for snake in self.snakes:
+        for snake in self.slangen:
             for c in self.potential_next_moves(snake):
                 if not (snake.id == self.mijn_slang_id):
                   (self.board[c.x][c.y]).can_be_occupied_in_next_round = True
 
-    def parse_slang(self, snake_data):
-        snake = Slang(snake_data['id'])
-        for b in (snake_data['body'])[:-1]:
-            snake.add_snakePart(SlangCel(b['x'], b['y']))
-        tail = SlangStaartCel(snake_data['body'][-1]['x'],
-                         snake_data['body'][-1]['y'])
-        snake.add_snakePart(tail)
-        return snake
+    def zet_slang_op_bord(self, snake):
+        self.slangen.append(snake)
+        for segment in snake.segmenten:
+            self.board[p.x][p.y] = segment
 
-    def update_board_with_snake(self, snake):
-        for p in snake.snakeParts:
-            self.board[p.x][p.y] = p
 
     def potential_next_moves(self, snake):
         kop = snake.snakeParts[0]
@@ -77,6 +76,9 @@ class Bord(object):
           Debug.log(i.position_string())
         return mogelijke_cellen
 
+    # protocol om buur cellen voor een bepaalde cel te berekenen
+    # buren(cel)
+    # buur_in_richting(cel, richting)
     def buur_in_richting (self, cell, direction):
       if direction == Richting.boven:
         return self.buur_boven(cell)
@@ -106,7 +108,6 @@ class Bord(object):
           Debug.log(i.position_string())
         return neighbours
 
-
     def buur_rechts(self, cel):
         if cel.x == self.bord_breedte -1:
             return None
@@ -131,6 +132,7 @@ class Bord(object):
         else:
             return self.cel(cell.x, cell.y - 1)
 
+    # protocol om alle cellen in een bepaalde richting tov een cel te berekenen
     def cellen_in_richting(self, cell, direction):
         if direction == Richting.boven:
             return self.cellen_in_richting_boven(cell)
@@ -140,18 +142,6 @@ class Bord(object):
             return self.cellen_in_richting_links(cell)
         elif direction == Richting.rechts:
             return self.cellen_in_richting_rechts(cell)
-
-    def cellen_in_richting_links(self, cell):
-        cells = []
-        for i in reversed(range(0, cell.x)):
-            cells.append(self.cel(i, cell.y))
-        return cells
-
-    def cellen_in_richting_rechts(self, cell):
-        cells = []
-        for i in range(cell.x + 1, self.bord_breedte):
-            cells.append(self.cel(i, cell.y))
-        return cells
 
     def cellen_in_richting_boven(self, cell):
         cells = []
@@ -165,7 +155,20 @@ class Bord(object):
             cells.append(self.cel(cell.x, i))
         return cells
 
-    def number_of_free_cells(self, cell, direction):
+    def cellen_in_richting_links(self, cell):
+        cells = []
+        for i in reversed(range(0, cell.x)):
+            cells.append(self.cel(i, cell.y))
+        return cells
+
+    def cellen_in_richting_rechts(self, cell):
+        cells = []
+        for i in range(cell.x + 1, self.bord_breedte):
+            cells.append(self.cel(i, cell.y))
+        return cells
+
+    # geef het aantal vrije cellen in een bepaalde richting tov een cel
+    def aantal_vrije_cellen(self, cell, direction):
         cells = self.cellen_in_richting(cell, direction)
         count = 0
         for c in cells:
@@ -197,11 +200,8 @@ class Bord(object):
                 return count
         return count
 
-    def cel(self, x, y):
-        return self.board[x][y]
-
     def is_blocked(self, cell, direction):
-        if self.number_of_free_cells(cell, direction) == 0:
+        if self.aantal_vrije_cellen(cell, direction) == 0:
           return True
           
         if direction == Richting.boven:
@@ -247,72 +247,4 @@ class Bord(object):
 
 
 
-class Cel(object):
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.can_be_occupied_in_next_round = False
 
-    def __str__(self):
-        return "(" + str(self.x) + ", " + str(self.y) + ")"
-
-    def bevat_eten(self):
-        return False
-
-    def is_slang(self):
-        return False
-
-    def is_vrij(self):
-        return True
-
-    def als_letter(self):
-        if self.can_be_occupied_in_next_round:
-          return '?'
-        return ' '
-
-    def position_string(self):
-        return "[" + str(self.x) + ", " + str(self.y) + "]"
-
-
-class PotentialSnakePart(Cel):
-
-    def is_vrij(self):
-        return False
-
-    def als_letter(self):
-        return '?'
-
-
-class VoedselCel(Cel):
-    def bevat_eten(self):
-        return True
-
-    def als_letter(self):
-        return '*'
-
-
-class SlangCel(Cel):
-    def is_slang(self):
-        return True
-
-    def is_vrij(self):
-        return False
-
-    def als_letter(self):
-        return '^'
-
-
-class SlangStaartCel(SlangCel):
-    def is_slang(self):
-        return True
-
-    # tail is free in next move
-    def is_vrij(self):
-        return True
-
-
-class Richting(Enum):
-    boven = 'up'
-    rechts = 'right'
-    onder = 'down'
-    links = 'left'

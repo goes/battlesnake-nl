@@ -1,4 +1,5 @@
-from board import Bord, Richting
+from bord import Bord
+from bedrock import Richting
 
 class SlangenBrein(object):
 
@@ -81,7 +82,7 @@ class SlangenBrein(object):
     def bord_breedte(self):
         return self.bord.bord_breedte
 
-  '''
+'''
 OLD
 
         if richting == Richting.boven:
@@ -130,4 +131,4 @@ OLD
             aantal = aantal + self.celwaarde(cell)
         return aantal
         
-        '''
+'''

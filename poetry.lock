@@ -1,5 +1,13 @@
 [[package]]
 category = "main"
+description = "Standard Board mechanism for Dojo tasks"
+name = "board"
+optional = false
+python-versions = "*"
+version = "1.0"
+
+[[package]]
+category = "main"
 description = "Highly-optimized, pure-python HTTP server"
 name = "cheroot"
 optional = false
@@ -153,6 +161,14 @@ version = "1.15.0"
 
 [[package]]
 category = "main"
+description = "Snake is yet another Make-like tool inspired by Rake."
+name = "snake"
+optional = false
+python-versions = "*"
+version = "0.2"
+
+[[package]]
+category = "main"
 description = "Objects and routines pertaining to date and time (tempora)"
 name = "tempora"
 optional = false
@@ -182,10 +198,14 @@ setuptools = "*"
 test = ["zope.testing"]
 
 [metadata]
-content-hash = "c8567bdb566e1d610f81f201dce2396242fda4fa0c2b4f18ceca58f831dc9eaa"
+content-hash = "d4b664e1ef912886bda9fc9afbd62b9bd680129fbfdd16dd3391bbf768d25a49"
 python-versions = "^3.8"
 
 [metadata.files]
+board = [
+    {file = "board-1.0-py2.py3-none-any.whl", hash = "sha256:b97c986d0190a2a5181a7fe28959cd8515520b87f672796e21e1b0d32cc63e2f"},
+    {file = "board-1.0.tar.gz", hash = "sha256:cd718c3322a126d86455e24ae0cebb59a567cbdbaf03696391dccf88c8f456d6"},
+]
 cheroot = [
     {file = "cheroot-8.4.5-py2.py3-none-any.whl", hash = "sha256:ab342666c8e565a55cd2baf2648be9b379269a89d47e60862a087cff9d8b33ce"},
     {file = "cheroot-8.4.5.tar.gz", hash = "sha256:b6c18caf5f79cdae668c35fc8309fc88ea4a964cce9e2ca8504fab13bcf57301"},
@@ -239,6 +259,9 @@ pywin32 = [
 six = [
     {file = "six-1.15.0-py2.py3-none-any.whl", hash = "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"},
     {file = "six-1.15.0.tar.gz", hash = "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259"},
+]
+snake = [
+    {file = "Snake-0.2.tar.gz", hash = "sha256:d922823ec140557e5b87dd0912cfddd65681df2753988caa3f224ebf4ebbeeac"},
 ]
 tempora = [
     {file = "tempora-4.0.0-py3-none-any.whl", hash = "sha256:9f46de767be7dd21d9602a8a5b0978fd55abc70af3e2a7814c85c00d7a8fffa3"},
