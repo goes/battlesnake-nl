@@ -33,11 +33,11 @@ class SlangenBrein(object):
         return richting.value
 
     def bereken_volgende_zet(self):
-        self.bord.print_board()
+        # self.bord.print_board()
         richtingen = {}
         for richting in self.alle_richtingen:
             richtingen[richting] = self.bereken_waarde_voor_richting(richting)
-        print(richtingen)
+        # print(richtingen)
         new_dir = max(richtingen, key=richtingen.get)
         return new_dir
 

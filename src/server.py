@@ -8,7 +8,7 @@ from slangen.soetkin import Soetkin
 from slangen.pelle import Pelle
 from slangen.dendikke import DenDikke
 
-slang_klasse = Soetkin
+slang_klasse = Pelle
 
 class Battlesnake(object):
     @cherrypy.expose

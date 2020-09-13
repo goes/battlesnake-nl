@@ -187,30 +187,4 @@ class Bord(object):
             str = str + "\n"
         print(str)
 
-'''
-def is_blocked_left(self, cell):
-        if cell.x == 0:
-            return True
-        else:
-            return self.cel(cell.x - 1, cell.y).is_slang()
-
-    def is_blocked_right(self, cell):
-        if cell.x == self.bord_breedte - 1:
-            return True
-        else:
-            return self.cel(cell.x + 1, cell.y).is_slang()
-
-    def is_blocked_up(self, cell):
-        if cell.y == self.bord_hoogte - 1:
-            return True
-        else:
-            return self.cel(cell.x, cell.y + 1).is_slang()
-
-    def is_blocked_down(self, cell):
-        if cell.y == 0:
-            return True
-        else:
-            return self.cel(cell.x, cell.y - 1).is_slang()
-'''
-
 
