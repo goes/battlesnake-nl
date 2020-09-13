@@ -1,5 +1,5 @@
-from .bord import Bord
-from .bedrock import Richting
+from bord import Bord
+from bedrock import Richting
 
 class SlangenBrein(object):
 
@@ -10,9 +10,20 @@ class SlangenBrein(object):
     def __init__(self, dataJson, bord):
         self.bord = bord
         self.data = dataJson
+        self.id = self.data['you']['id']
         self.slang_x = self.data['you']['head']['x']
         self.slang_y = self.data['you']['head']['y']
         self.gezondheid = self.data['you']['health']
+
+    @classmethod
+    def uiterlijk(cls):
+      return {
+            "apiversion": "1",
+            "author": "goes",
+            "color": "#c70039",
+            "head": "tongue",
+            "tail": "skinny",
+        }
 
     # berekenen volgende zet
     # het principe: per richting bepqql je een numerieke waarde, de richting met de hoogste waarde is de richting van de volgende zet
@@ -30,11 +41,13 @@ class SlangenBrein(object):
         new_dir = max(richtingen, key=richtingen.get)
         return new_dir
 
+    # als ik honger heb wil ik sneller naar eten zoeken, maar ook niet te snel want hoe langer ik word hoe gemakkelijker mijzelf vast zet
     def heeft_honger(self):
         return self.gezondheid < 40
 
+    # de berekening
     def bereken_waarde_voor_richting(self, richting):
-        if self.is_blocked(richting):
+        if self.is_geblokkeerd(richting):
             return -1000
             
         #beginnend bij de kop    
@@ -45,13 +58,6 @@ class SlangenBrein(object):
                 return waarde
             waarde = waarde + self.celwaarde(c)
         return waarde
-      
-    def calculate_next_move_random(self):
-        self.free_Richtings()
-        last_move_index = self.possible_moves.index(self.last_move())
-        new_index = (last_move_index + 1) % 4
-        new_move = self.possible_moves[new_index]
-        return new_move
 
     # hoeveel waarde geef je een cel 
     def celwaarde(self, cel):
@@ -65,16 +71,14 @@ class SlangenBrein(object):
         else:
             return 4 - len(self.bord.buren(cel))
 
- 
-
-
-
-
     def kop(self):
         return self.bord.cel(self.slang_x, self.slang_y)
 
-    def is_blocked(self, richting):
+    def is_geblokkeerd(self, richting):
         return self.bord.is_geblokkeerd_in_richting(self.kop(), richting)
+
+    def andere_slangen(self):
+        return filter(lambda slang: slang.id != self.id, self.bord.slangen)
 
     def bord_hoogte(self):
         return self.bord.bord_hoogte

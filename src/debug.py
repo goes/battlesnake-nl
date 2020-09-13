@@ -2,7 +2,7 @@ class Debug(object):
 
   @classmethod
   def is_debug_on(cls):
-    return True
+    return False
   
   @classmethod
   def log_with_action(cls, log_string, action_string):

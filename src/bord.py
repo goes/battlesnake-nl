@@ -1,6 +1,6 @@
-from .bedrock import Richting, Cel, VoedselCel, SlangCel, SlangStaartCel
-from .slang import Slang
-from .debug import Debug
+from bedrock import Richting, Cel, VoedselCel
+from slang import Slang
+from debug import Debug
 
 class Bord(object):
   

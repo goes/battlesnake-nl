@@ -1,27 +1,20 @@
 import os
 import cherrypy
 
-from .debug import Debug
-from .brein import SlangenBrein
-from .bord import Bord
-from .soetkin import Soetkin
-from .pelle import Pelle
+from debug import Debug
+from brein import SlangenBrein
+from bord import Bord
+from slangen.soetkin import Soetkin
+from slangen.pelle import Pelle
+from slangen.dendikke import DenDikke
 
+slang_klasse = Soetkin
 
 class Battlesnake(object):
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def index(self):
-        # This function is called when you register your Battlesnake on play.battlesnake.com
-        # It controls your Battlesnake appearance and author permissions.
-        # TIP: If you open your Battlesnake URL in browser you should see this data
-        return {
-            "apiversion": "1",
-            "author": "goes",
-            "color": "#c70039",
-            "head": "tongue",
-            "tail": "skinny",
-        }
+        return slang_klasse.uiterlijk()
 
     @cherrypy.expose
     @cherrypy.tools.json_in()
@@ -39,11 +32,10 @@ class Battlesnake(object):
   
         data = cherrypy.request.json
         bord = Bord(data)
-        slang = SlangenBrein(data, board)
+        slang = slang_klasse(data, bord)
         move = slang.volgende_zet()
 
-        Debug.log_with_action(cls, move, "Volgende zet")
-        # print(f"MOVE: {move}")
+        print(f"MOVE: {move}")
         return {"move": move}
 
     @cherrypy.expose
@@ -51,7 +43,7 @@ class Battlesnake(object):
     def end(self):
         # This function is called when a game your snake was in ends.
         # It's purely for informational purposes, you don't have to make any decisions here.
-        data = cherrypy.request.json
+        # data = cherrypy.request.json
 
         print("END")
         return "ok"
