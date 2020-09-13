@@ -1,6 +1,4 @@
 from brein import SlangenBrein
-from debug import Debug
-from bedrock import Cel
 
 # Pelle is very hungry all the time
 class Pelle(SlangenBrein):
