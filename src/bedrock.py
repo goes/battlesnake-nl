@@ -15,7 +15,7 @@ class Cel(object):
     def __str__(self):
         return "(" + str(self.x) + ", " + str(self.y) + ")"
 
-    def bevat_eten(self):
+    def is_voedsel(self):
         return False
 
     def is_slang(self):
@@ -25,25 +25,14 @@ class Cel(object):
         return True
 
     def als_letter(self):
-        if self.can_be_occupied_in_next_round:
-          return '?'
         return ' '
 
     def position_string(self):
         return "[" + str(self.x) + ", " + str(self.y) + "]"
 
 
-class PotentialSnakePart(Cel):
-
-    def is_vrij(self):
-        return False
-
-    def als_letter(self):
-        return '?'
-
-
 class VoedselCel(Cel):
-    def bevat_eten(self):
+    def is_voedsel(self):
         return True
 
     def als_letter(self):

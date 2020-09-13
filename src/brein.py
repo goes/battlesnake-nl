@@ -1,5 +1,5 @@
-from bord import Bord
-from bedrock import Richting
+from .bord import Bord
+from .bedrock import Richting
 
 class SlangenBrein(object):
 
@@ -43,7 +43,7 @@ class SlangenBrein(object):
         for c in cellen:
             if c.is_slang():
                 return waarde
-            waarde = waarde + self.celwaarde(cel)
+            waarde = waarde + self.celwaarde(c)
         return waarde
       
     def calculate_next_move_random(self):
@@ -57,7 +57,7 @@ class SlangenBrein(object):
     def celwaarde(self, cel):
         if cel.is_slang():
             return -10
-        elif cel.is_food():
+        elif cel.is_voedsel():
             if self.heeft_honger:
                 return 4
             else:
@@ -74,7 +74,7 @@ class SlangenBrein(object):
         return self.bord.cel(self.slang_x, self.slang_y)
 
     def is_blocked(self, richting):
-        return self.bord.is_blocked(self.kop(), richting)
+        return self.bord.is_geblokkeerd_in_richting(self.kop(), richting)
 
     def bord_hoogte(self):
         return self.bord.bord_hoogte

@@ -1,4 +1,4 @@
-from brein import SlangenBrein
+from .brein import SlangenBrein
 
 # Pelle is very hungry all the time
 class Pelle(SlangenBrein):
@@ -25,3 +25,32 @@ class Pelle(SlangenBrein):
         else:
                 return 1
         
+  def potential_next_moves(self, snake):
+      kop = snake.segmenten[0]
+      Debug.log_with_action(kop.position_string(), 'Head + potential moves')
+      mogelijke_cellen = []
+      c = self.buur_links(kop)
+      if c is not None:
+        mogelijke_cellen.append(MogelijkeSlang(c.x, c.y))
+      c = self.buur_rechts(kop)
+      if c is not None:
+        mogelijke_cellen.append(MogelijkeSlang(c.x, c.y))
+      c = self.buur_boven(kop)
+      if c is not None:
+        mogelijke_cellen.append(MogelijkeSlang(c.x, c.y))
+      c = self.buur_onder(kop)
+      if c is not None:
+        mogelijke_cellen.append(MogelijkeSlang(c.x, c.y))
+      for i in mogelijke_cellen:
+        Debug.log(i.position_string())
+      return mogelijke_cellen
+
+
+
+class MogelijkeSlang(Cel):
+
+    def is_vrij(self):
+        return False
+
+    def als_letter(self):
+        return '?'

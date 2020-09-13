@@ -1,11 +1,11 @@
 import os
 import cherrypy
 
-from debug import Debug
-from brein import SlangenBrein
-from bord import Bord
-from soetkin import Soetkin
-from pelle import Pelle
+from .debug import Debug
+from .brein import SlangenBrein
+from .bord import Bord
+from .soetkin import Soetkin
+from .pelle import Pelle
 
 
 class Battlesnake(object):
@@ -40,7 +40,7 @@ class Battlesnake(object):
         data = cherrypy.request.json
         bord = Bord(data)
         slang = SlangenBrein(data, board)
-        move = slang.move()
+        move = slang.volgende_zet()
 
         Debug.log_with_action(cls, move, "Volgende zet")
         # print(f"MOVE: {move}")

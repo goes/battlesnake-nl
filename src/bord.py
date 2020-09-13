@@ -1,6 +1,6 @@
-from bedrock import Richting, Cel, VoedselCel, SlangCel, SlangStaartCel
-from slang import Slang
-from debug import Debug
+from .bedrock import Richting, Cel, VoedselCel, SlangCel, SlangStaartCel
+from .slang import Slang
+from .debug import Debug
 
 class Bord(object):
   
@@ -45,36 +45,10 @@ class Bord(object):
             slang = Slang(snake_data)
             self.zet_slang_op_bord(slang)
 
-        for snake in self.slangen:
-            for c in self.potential_next_moves(snake):
-                if not (snake.id == self.mijn_slang_id):
-                  (self.board[c.x][c.y]).can_be_occupied_in_next_round = True
-
     def zet_slang_op_bord(self, snake):
         self.slangen.append(snake)
         for segment in snake.segmenten:
-            self.board[p.x][p.y] = segment
-
-
-    def potential_next_moves(self, snake):
-        kop = snake.snakeParts[0]
-        Debug.log_with_action(kop.position_string(), 'Head + potential moves')
-        mogelijke_cellen = []
-        c = self.buur_links(kop)
-        if c is not None:
-            mogelijke_cellen.append(PotentialSnakePart(c.x, c.y))
-        c = self.buur_rechts(kop)
-        if c is not None:
-            mogelijke_cellen.append(PotentialSnakePart(c.x, c.y))
-        c = self.buur_boven(kop)
-        if c is not None:
-            mogelijke_cellen.append(PotentialSnakePart(c.x, c.y))
-        c = self.buur_onder(kop)
-        if c is not None:
-            mogelijke_cellen.append(PotentialSnakePart(c.x, c.y))
-        for i in mogelijke_cellen:
-          Debug.log(i.position_string())
-        return mogelijke_cellen
+            self.board[segment.x][segment.y] = segment
 
     # protocol om buur cellen voor een bepaalde cel te berekenen
     # buren(cel)
@@ -178,7 +152,7 @@ class Bord(object):
                 count = count + 1
         return count
 
-    def is_food_in_direction(self, cell, direction):
+    def is_er_eten_in_richting(self, cell, direction):
         cells = self.cellen_in_richting(cell, direction)
         for c in cells:
             if c.is_food():
@@ -187,7 +161,7 @@ class Bord(object):
                 return False
         return False
 
-    def distance_to_food(self, cell, direction):
+    def afstand_tot_voedsel(self, cell, direction):
         cells = self.cellen_in_richting(cell, direction)
         count = 0
         for c in cells:
@@ -200,20 +174,21 @@ class Bord(object):
                 return count
         return count
 
-    def is_blocked(self, cell, direction):
-        if self.aantal_vrije_cellen(cell, direction) == 0:
+    def is_geblokkeerd_in_richting(self, cell, richting):
+        if self.aantal_vrije_cellen(cell, richting) == 0:
           return True
-          
-        if direction == Richting.boven:
-            return self.is_blocked_up(cell)
-        elif direction == Richting.rechts:
-            return self.is_blocked_right(cell)
-        elif direction == Richting.onder:
-            return self.is_blocked_down(cell)
-        elif direction == Richting.links:
-            return self.is_blocked_left(cell)
+        return not self.buur_in_richting(cell, richting).is_vrij()
 
-    def is_blocked_left(self, cell):
+    def print_board(self):
+        str = ""
+        for y in reversed(range(0, self.bord_hoogte)):
+            for x in range(0, self.bord_breedte):
+                str = str + self.cel(x, y).als_letter() + " "
+            str = str + "\n"
+        print(str)
+
+'''
+def is_blocked_left(self, cell):
         if cell.x == 0:
             return True
         else:
@@ -236,15 +211,6 @@ class Bord(object):
             return True
         else:
             return self.cel(cell.x, cell.y - 1).is_slang()
-
-    def print_board(self):
-        str = ""
-        for y in reversed(range(0, self.bord_hoogte)):
-            for x in range(0, self.bord_breedte):
-                str = str + self.cel(x, y).als_letter() + " "
-            str = str + "\n"
-        print(str)
-
-
+'''
 
 

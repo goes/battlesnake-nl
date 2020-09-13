@@ -1,4 +1,4 @@
-from bedrock import Cel, SlangCel, SlangStaartCel
+from .bedrock import Cel, SlangCel, SlangStaartCel
 
 class Slang():
 

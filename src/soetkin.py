@@ -1,4 +1,4 @@
-from brein import SlangenBrein
+from .brein import SlangenBrein
 
 class Soetkin(SlangenBrein):
   
