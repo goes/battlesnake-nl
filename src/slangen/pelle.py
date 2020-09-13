@@ -15,7 +15,7 @@ class Pelle(SlangenBrein):
       }
 
   def heeft_honger(self):
-    return self.gezondheid < 50
+    return self.gezondheid < 40
 
   def andere_slangekoppen(self):
     return map(lambda slang: slang.segmenten[0], self.andere_slangen())
@@ -35,3 +35,16 @@ class Pelle(SlangenBrein):
       if self.is_buur_van_andere_slangekop(cel):
         waarde = waarde - 250
     return waarde
+
+  # hoeveel waarde geef je een cel 
+  # de som van de waarden van de cellen bepaalt de waarde van een bepaalde richting
+  def celwaarde(self, cel):
+    if cel.is_slang():
+        return -10
+    elif cel.is_voedsel():
+        if self.heeft_honger():
+          return 20
+        else:
+          return 2
+    else:
+        return 10 - (2 * len(self.bord.buren(cel)))
